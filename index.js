@@ -32,7 +32,6 @@ console.log("Command:", interaction.commandName);
 
 if (interaction.commandName === "play34") {
 
-```
 try {
 
   console.log("play34 started");
