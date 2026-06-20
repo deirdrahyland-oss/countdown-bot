@@ -58,7 +58,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
       console.log("Creating resource");
 
-      const resource = createAudioResource("./audio/34.mp3");
+      const resource = createAudioResource("./audio/34.ogg");
 
       console.log("Subscribing");
 
