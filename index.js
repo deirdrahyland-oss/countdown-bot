@@ -8,7 +8,9 @@ const {
 
 const {
   joinVoiceChannel,
-  getVoiceConnection
+  getVoiceConnection,
+  createAudioPlayer,
+  createAudioResource
 } = require("@discordjs/voice");
 
 const client = new Client({
@@ -27,6 +29,38 @@ client.once(Events.ClientReady, c => {
 client.on(Events.InteractionCreate, async interaction => {
 
   if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === "play34") {
+
+    const voiceChannel = interaction.member.voice.channel;
+
+    if (!voiceChannel) {
+      return interaction.reply({
+        content: "Join a voice channel first.",
+        ephemeral: true
+      });
+    }
+
+    const connection = joinVoiceChannel({
+      channelId: voiceChannel.id,
+      guildId: voiceChannel.guild.id,
+      adapterCreator: voiceChannel.guild.voiceAdapterCreator
+    });
+
+    const player = createAudioPlayer();
+
+    const resource = createAudioResource(
+      "./audio/34.mp3"
+    );
+
+    connection.subscribe(player);
+
+    player.play(resource);
+
+    return interaction.reply(
+      "Playing 34.mp3"
+    );
+  }
 
   if (
     interaction.commandName === "countdown" ||
