@@ -32,7 +32,6 @@ console.log("Command:", interaction.commandName);
 
 if (interaction.commandName === "play34") {
 
-```
 console.log("play34 started");
 
 const voiceChannel = interaction.member.voice.channel;
@@ -70,13 +69,11 @@ console.log("Playing audio");
 player.play(resource);
 
 return interaction.reply("Playing 34.mp3");
-```
 
 }
 
 if (interaction.commandName === "disconnect") {
 
-```
 const connection =
   getVoiceConnection(interaction.guild.id);
 
@@ -87,7 +84,6 @@ if (connection) {
 return interaction.reply(
   "Disconnected from voice."
 );
-```
 
 }
 
