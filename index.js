@@ -1,97 +1,82 @@
 require("dotenv").config();
 
-const { Client, GatewayIntentBits, Events } = require("discord.js");
 const {
-  joinVoiceChannel,
-  getVoiceConnection,
-  createAudioPlayer,
-  createAudioResource
-} = require("@discordjs/voice");
+Client,
+GatewayIntentBits,
+Events
+} = require("discord.js");
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildVoiceStates
-  ]
+intents: [
+GatewayIntentBits.Guilds
+]
 });
 
+let activeCountdown = false;
+
 client.once(Events.ClientReady, c => {
-  console.log(`Ready! Logged in as ${c.user.tag}`);
+console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
 
-  if (!interaction.isChatInputCommand()) return;
+if (!interaction.isChatInputCommand()) return;
 
-  console.log("Command:", interaction.commandName);
+if (interaction.commandName === "countdown") {
 
-  if (interaction.commandName === "play34") {
+if (activeCountdown) {
+  return interaction.reply({
+    content: "A countdown is already running.",
+    ephemeral: true
+  });
+}
 
-    try {
+const start = interaction.options.getInteger("start");
+const end = interaction.options.getInteger("end");
 
-      console.log("play34 started");
+if (start <= end) {
+  return interaction.reply({
+    content: "Start must be greater than end.",
+    ephemeral: true
+  });
+}
 
-      const voiceChannel = interaction.member.voice.channel;
+activeCountdown = true;
 
-      if (!voiceChannel) {
-        return interaction.reply({
-          content: "Join a voice channel first.",
-          ephemeral: true
-        });
-      }
+await interaction.reply({
+  content: `Starting countdown from ${start} to ${end}`,
+  ephemeral: true
+});
 
-      console.log("Joining voice");
+for (let i = start; i >= end; i--) {
 
-      const connection = joinVoiceChannel({
-        channelId: voiceChannel.id,
-        guildId: voiceChannel.guild.id,
-        adapterCreator: voiceChannel.guild.voiceAdapterCreator
-      });
-
-      console.log("Voice joined");
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      console.log("Creating player");
-
-      const player = createAudioPlayer();
-
-      console.log("Creating resource");
-
-      const resource = createAudioResource("./audio/34.ogg");
-
-      console.log("Subscribing");
-
-      connection.subscribe(player);
-
-      console.log("Playing");
-
-      player.play(resource);
-
-      return interaction.reply("Playing 34.mp3");
-
-    } catch (error) {
-
-      console.error("PLAY34 ERROR:");
-      console.error(error);
-
-      return interaction.reply({
-        content: "Error - check Railway logs",
-        ephemeral: true
-      });
-    }
+  if (!activeCountdown) {
+    break;
   }
 
-  if (interaction.commandName === "disconnect") {
+  await interaction.channel.send({
+    content: String(i),
+    tts: true
+  });
 
-    const connection = getVoiceConnection(interaction.guild.id);
+  await new Promise(resolve =>
+    setTimeout(resolve, 1000)
+  );
+}
 
-    if (connection) {
-      connection.destroy();
-    }
+activeCountdown = false;
 
-    return interaction.reply("Disconnected from voice.");
-  }
+}
+
+if (interaction.commandName === "cancel") {
+
+activeCountdown = false;
+
+return interaction.reply({
+  content: "Countdown cancelled."
+});
+
+}
 
 });
 
