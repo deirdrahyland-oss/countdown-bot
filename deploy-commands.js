@@ -3,6 +3,7 @@ require("dotenv").config();
 const { REST, Routes, SlashCommandBuilder } = require("discord.js");
 
 const commands = [
+
   new SlashCommandBuilder()
     .setName("countdown")
     .setDescription("Start a countdown")
@@ -24,10 +25,30 @@ const commands = [
     ),
 
   new SlashCommandBuilder()
+    .setName("rally")
+    .setDescription("15 second rally countdown")
+    .addIntegerOption(option =>
+      option
+        .setName("start")
+        .setDescription("Starting number")
+        .setRequired(true)
+        .setMinValue(1)
+        .setMaxValue(50)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName("duration")
+        .setDescription("Optional duration (default 15)")
+        .setRequired(false)
+        .setMinValue(1)
+        .setMaxValue(50)
+    ),
+
+  new SlashCommandBuilder()
     .setName("cancel")
     .setDescription("Cancel active countdown")
-]
-.map(command => command.toJSON());
+
+].map(command => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
