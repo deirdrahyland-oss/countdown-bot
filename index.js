@@ -12,8 +12,9 @@ const {
 
 const client = new Client({
   intents: [
-  GatewayIntentBits.Guilds,
-  GatewayIntentBits.GuildVoiceStates
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildVoiceStates
+  ]
 });
 
 let activeCountdown = null;
