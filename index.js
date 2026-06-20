@@ -6,8 +6,14 @@ const {
   Events
 } = require("discord.js");
 
+const {
+  joinVoiceChannel
+} = require("@discordjs/voice");
+
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds]
+  intents: [
+  GatewayIntentBits.Guilds,
+  GatewayIntentBits.GuildVoiceStates
 });
 
 let activeCountdown = null;
@@ -24,6 +30,20 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const start = interaction.options.getInteger("start");
     const duration = interaction.options.getInteger("duration");
+    const voiceChannel = interaction.member.voice.channel;
+
+if (!voiceChannel) {
+  return interaction.reply({
+    content: "Join a voice channel first.",
+    ephemeral: true
+  });
+}
+
+joinVoiceChannel({
+  channelId: voiceChannel.id,
+  guildId: voiceChannel.guild.id,
+  adapterCreator: voiceChannel.guild.voiceAdapterCreator
+});
 
     if (activeCountdown) {
       return interaction.reply({
