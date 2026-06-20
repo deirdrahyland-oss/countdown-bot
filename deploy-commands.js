@@ -49,6 +49,10 @@ const commands = [
     .setDescription("Disconnect from voice"),
 
   new SlashCommandBuilder()
+    .setName("play34")
+    .setDescription("Play 34 audio test"),
+
+  new SlashCommandBuilder()
     .setName("cancel")
     .setDescription("Cancel active countdown")
 
