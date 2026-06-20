@@ -1,22 +1,6 @@
 require("dotenv").config();
 
-const {
-  Client,
-  GatewayIntentBits,
-  SlashCommandBuilder,
-  REST,
-  Routes
-} = require("discord.js");
+console.log("TOKEN EXISTS:", !!process.env.TOKEN);
+console.log("TOKEN LENGTH:", process.env.TOKEN ? process.env.TOKEN.length : 0);
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildVoiceStates
-  ]
-});
-
-client.once("ready", async () => {
-  console.log(`Logged in as ${client.user.tag}`);
-});
-
-client.login(process.env.TOKEN);
+setInterval(() => {}, 1000);
